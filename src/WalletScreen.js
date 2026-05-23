@@ -15,6 +15,7 @@ import {
 import {
   generateTransactionHistory,
   calculateNetBalance,
+  calculateTotalCashback,
 } from './walletEngine';
 
 const allTransactions = generateTransactionHistory(200);
@@ -43,11 +44,14 @@ export default function WalletScreen() {
 
   const netBalance = calculateNetBalance(allTransactions);
 
+  const totalCashback = calculateTotalCashback(allTransactions);
+
   const renderItem = useCallback(({ item }) => (
 
     <View style={styles.card}>
 
       <View>
+
         <Text style={styles.type}>
           {item.type}
         </Text>
@@ -59,19 +63,24 @@ export default function WalletScreen() {
         <Text>
           Estado: {item.status}
         </Text>
+
       </View>
 
-      <Text
-        style={[
-          styles.amount,
+      <View>
 
-          item.type === 'Ingreso'
-            ? styles.income
-            : styles.withdraw,
-        ]}
-      >
-        ${item.amount.toLocaleString('es-CO')}
-      </Text>
+        <Text
+          style={[
+            styles.amount,
+
+            item.type === 'Ingreso'
+              ? styles.income
+              : styles.withdraw,
+          ]}
+        >
+          ${item.amount.toLocaleString('es-CO')}
+        </Text>
+
+      </View>
 
     </View>
 
@@ -87,6 +96,10 @@ export default function WalletScreen() {
 
       <Text style={styles.balance}>
         ${netBalance.toLocaleString('es-CO')}
+      </Text>
+
+      <Text style={styles.cashback}>
+        Puntos ADSO: {totalCashback.toLocaleString('es-CO')}
       </Text>
 
       <View style={styles.buttons}>
@@ -131,7 +144,9 @@ export default function WalletScreen() {
       />
 
     </View>
+
   );
+
 }
 
 const styles = StyleSheet.create({
@@ -150,8 +165,15 @@ const styles = StyleSheet.create({
   balance: {
     fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
     color: 'blue',
+  },
+
+  cashback: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: 'green',
   },
 
   buttons: {
